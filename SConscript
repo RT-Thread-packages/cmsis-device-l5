@@ -18,8 +18,10 @@ mcu_startup_files = {
 }
 
 # Check each defined MCU, match the platform and append the appropriate startup file
+cpp_defines_tuple = env.get('CPPDEFINES', [])
+cpp_defines_list = [item[0] if isinstance(item, tuple) else item for item in cpp_defines_tuple]
 for mcu, startup_file in mcu_startup_files.items():
-    if mcu in env.get('CPPDEFINES', []):
+    if mcu in cpp_defines_list:
         if rtconfig.PLATFORM in ['gcc', 'llvm-arm']:
             src += [os.path.join(cwd, 'Source', 'Templates', 'gcc', startup_file)]
         elif rtconfig.PLATFORM in ['armcc', 'armclang']:
